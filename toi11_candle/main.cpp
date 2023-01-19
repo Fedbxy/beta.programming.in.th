@@ -4,17 +4,21 @@ using namespace std;
 
 int m,n;
 const int N=2e3;
-char a[N][N];
 bool flag[N][N];
 
-void dfs(int ui,int uj){
-    flag[ui][uj]=true;
-    int ti[8]={0,0,-1,1,1,-1,-1,1};
-    int tj[8]={-1,1,0,0,1,-1,1,-1};
-    for(int i=0;i<8;i++){
-        int vi=ui+ti[i],vj=uj+tj[i];
-        if(vi>=0 and vi<m and vj>=0 and vj<n){
-            if(!flag[vi][vj]) dfs(vi,vj);
+void bfs(int si,int sj){
+    queue<pair<int,int>> q;
+    q.push({si,sj});
+    flag[si][sj]=true;
+    while(!q.empty()){
+        int ui=q.front().first,uj=q.front().second;q.pop();
+        int ti[8]={0,0,-1,1,1,-1,-1,1};
+        int tj[8]={-1,1,0,0,1,-1,1,-1};
+        for(int i=0;i<8;i++){
+            int vi=ui+ti[i],vj=uj+tj[i];
+            if(vi>=0 and vi<m and vj>=0 and vj<n){
+                if(!flag[vi][vj]) flag[vi][vj]=true,q.push({vi,vj});
+            }
         }
     }
 }
@@ -25,8 +29,7 @@ int main(){
     for(int i=0;i<m;i++){
         string s;cin>>s;
         for(int j=0;j<n;j++){
-            a[i][j]=s[j];
-            if(a[i][j]=='0') flag[i][j]=true;
+            if(s[j]=='0') flag[i][j]=true;
         }
     }
     int cnt=0;
@@ -34,7 +37,7 @@ int main(){
         for(int j=0;j<n;j++){
             if(!flag[i][j]){
                 cnt++;
-                dfs(i,j);
+                bfs(i,j);
             }
         }
     }
